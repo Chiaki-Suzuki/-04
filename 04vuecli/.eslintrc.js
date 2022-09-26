@@ -44,12 +44,15 @@ module.exports = {
     'space-before-blocks': 'off',
     'spaced-comment': 'off',
     'vue/multi-word-component-names': 'off',
-    'vue/no-reserved-component-names': 'off',
-    'vue/no-parsing-error': [2, { 'x-invalid-end-tag': false }],
     'vue/no-deprecated-v-on-native-modifier': 'off',
     'vue/no-deprecated-filter': 'off',
+    'vue/no-parsing-error': [2, { 'x-invalid-end-tag': false }],
+    'vue/no-reserved-component-names': 'off',
+    'vue/no-side-effects-in-computed-properties': 'off',
+    'vue/no-unused-vars': 'off',
+    'vue/no-use-v-if-with-v-for': 'off',
     'vue/require-v-for-key': 'off',
     'vue/require-component-is': 'off',
-    'vue/no-use-v-if-with-v-for': 'off'
+    'vue/return-in-computed-property': 'off',
   },
 };
