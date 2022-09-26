@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>通販サイト料金 | 自動計算機能</title>
+        <meta name="description" content="通販サイト料金の自動計算機能">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-reboot.min.css">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="app">
+            <div class="container flex_box">
+                <div class="products">
+                    <h2>商品入力欄</h2>
+                    <div class="columnBox">
+                        <div class="column" v-for="item in column" v-bind:key="item.name">
+                            <label><p>商品名</p><input type="text" size="25" v-show="item" v-model.lazy="item.name" v-on:change="itemDispName"></label>
+                            <label><p>金額</p><input type="text" size="8" v-model.number.lazy="item.price" v-on:change="itemSumPrice"> 円</label>
+                            <label class="num"><p>個数</p><input type="text" size="4" v-model.number.lazy="item.num" v-on:change="itemSumPrice"> 個</label>
+                        </div>
+                    </div>
+                    <button v-on:click="addColumn">商品を追加</button>
+                </div>
+                <div class="calc">
+                    <h2>合計金額</h2>
+                    <div class="msgBox">
+                        <p class="msg" v-for="sum in items">{{ sum.itemName }} {{ sum.price }}円</p>
+                    </div>
+                    <p class="sum">合計 {{ totalSumPrice() }}円</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="main.js"></script>
+</html>
