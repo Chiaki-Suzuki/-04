@@ -10,13 +10,19 @@
             <th>金額</th>
             <th>個数</th>
           </tr>
-          <tr class="itembox" v-for="item in items" v-bind:key="item.num">
+          <tr class="itembox" v-for="(item, i) in items" v-bind:key="item.id">
             <td><input type="text" class="name" v-model="item.name" v-on:change="nameDisp"></td>
             <td><input type="tel" class="price" v-model="item.price" v-on:change="sumPrice">円</td>
             <td>
-              <input type="num" class="num" v-model="item.num" v-on:change="sumPrice">個
-              <button class="delbtn">×</button>
+              <button class="minus">-</button>
+              <input type="num" class="num" v-model="item.num" v-on:change="sumPrice">
+              <button class="plus">+</button>
+              個
+              <button class="delbtn" v-on:click="deleteItem(i)">×</button>
             </td>
+          </tr>
+          <tr>
+            <td class="itembox empty" colspan="3" v-if="items.length === 0"><p>商品を追加してください。</p></td>
           </tr>
         </table>
         <button class="additem" v-on:click="boxNum">商品を追加</button>
@@ -42,14 +48,15 @@ export default {
   name: 'App',
   data: () => {
     return {
-      items: [{name: '', price: 0, num: 0}],
+      id: 1,
+      items: [{name: '', price: 0, num: 0, id: 0}],
       sumItem: [{name: '', price: 0}]
     }
   },
   methods: {
     boxNum: function() {
       // 商品入力欄を追加
-      let newItemBox = {name: '', price: 0, num: 0}
+      let newItemBox = {name: '', price: 0, num: 0, id: this.id++}
       this.items.push(newItemBox)
 
       // 合計表示欄を追加
@@ -75,6 +82,11 @@ export default {
         sum += this.sumItem[i].price;
       }
       return sum;
+    },
+    deleteItem: function(i) {
+      // 商品を削除
+      this.items.splice(i, 1)
+      this.sumItem.splice(i, 1)
     }
   }
 }
@@ -218,6 +230,10 @@ input[type=num] {
   cursor: pointer;
   float: right;
   margin: 7px 0;
+}
+
+.item .empty p {
+  color: #ccc;
 }
 
 /*-------------------------
