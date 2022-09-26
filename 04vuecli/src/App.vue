@@ -14,9 +14,9 @@
             <td><input type="text" class="name" v-model="item.name" v-on:change="nameDisp"></td>
             <td><input type="tel" class="price" v-model="item.price" v-on:change="sumPrice">円</td>
             <td>
-              <button class="minus">-</button>
+              <button class="numchange" v-on:click="minusNum(i)" v-bind:disabled="item.active">－</button>
               <input type="num" class="num" v-model="item.num" v-on:change="sumPrice">
-              <button class="plus">+</button>
+              <button class="numchange" v-on:click="plusNum(i)">＋</button>
               個
               <button class="delbtn" v-on:click="deleteItem(i)">×</button>
             </td>
@@ -49,14 +49,14 @@ export default {
   data: () => {
     return {
       id: 1,
-      items: [{name: '', price: 0, num: 0, id: 0}],
-      sumItem: [{name: '', price: 0}]
+      items: [{name: '', price: 0, num: 0, id: 0, active: true}],
+      sumItem: [{name: '', price: 0}],
     }
   },
   methods: {
     boxNum: function() {
       // 商品入力欄を追加
-      let newItemBox = {name: '', price: 0, num: 0, id: this.id++}
+      let newItemBox = {name: '', price: 0, num: 0, id: this.id++, active: true}
       this.items.push(newItemBox)
 
       // 合計表示欄を追加
@@ -72,6 +72,11 @@ export default {
     sumPrice: function() {
       // 各商品の合計
       for (let i = 0; i < this.items.length; i++) {
+        // 個数の判定
+        if (this.items[i].num > 0) {
+          this.items[i].active = false;
+        }
+        // 各商品の合計
         this.sumItem[i].price = this.items[i].price * this.items[i].num
       }
     },
@@ -87,6 +92,28 @@ export default {
       // 商品を削除
       this.items.splice(i, 1)
       this.sumItem.splice(i, 1)
+    },
+    minusNum: function(id) {
+      // 商品の個数を減らす
+      this.items[id].num--;
+      // 0個以下には減らせないようにする
+      for (let i = 0; i < this.items.length; i++) {
+        if (this.items[i].num <= 0) {
+          this.items[i].active = true;
+        }
+      }
+      this.sumPrice()
+    },
+    plusNum: function(id) {
+      // 商品の個数を増やす
+      this.items[id].num++
+      // マイナスのdisableを解除
+      for (let i = 0; i < this.items.length; i++) {
+        if (this.items[i].num > 0) {
+          this.items[i].active = false;
+        }
+      }
+      this.sumPrice()
     }
   }
 }
@@ -133,6 +160,14 @@ table {
 input,
 button {
   outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.7;
 }
 
 p {
@@ -197,10 +232,32 @@ input[type=num] {
   width: 80%;
 }
 
-.item .price,
-.item .num {
+.item .price {
   width: 60px;
   margin: 0 3px 0 0;
+}
+
+.item .num {
+  width: 40px;
+  margin: 0 3px;
+}
+
+.item .numchange {
+  border: 0;
+  padding: 7px 10px;
+  border-radius: 5px;
+  background-color: #eff4f9;
+  color: #777e85;
+}
+
+.item .numchange:disabled {
+  background-color: #ddd;
+  color: #fff;
+  cursor: auto;
+}
+
+.item .numchange:disabled:hover {
+  opacity: 1;
 }
 
 .item .additem {
@@ -212,12 +269,7 @@ input[type=num] {
   background-color: #e96a6a;
   color: #fff;
   padding: 10px;
-  cursor: pointer;
   transition: .3s;
-}
-
-.item .additem:hover {
-  opacity: 0.7;
 }
 
 .item .delbtn {
@@ -227,7 +279,6 @@ input[type=num] {
   border: 0;
   background-color: #e96a6a;
   color: #fff;
-  cursor: pointer;
   float: right;
   margin: 7px 0;
 }
